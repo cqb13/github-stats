@@ -4,7 +4,7 @@ use cli::{Arg, Cli, Command};
 
 fn main() {
     let cli = Cli::new().with_default_command("help").with_commands(vec![
-        Command::new("version", "Displays the current version of fmap").with_short('v'),
+        Command::new("version", "Displays the current version of github-stats").with_short('v'),
         Command::new("install", "Installs the files and directories"),
         Command::new("all", "Gives all stats found on a repository as json")
             .with_arg(
@@ -30,6 +30,13 @@ fn main() {
                     .with_long("output")
                     .with_value_name("OUTPUT")
                     .with_help("File path to save the json"),
+            )
+            .with_arg(
+                Arg::new()
+                    .with_name("display")
+                    .with_short('d')
+                    .with_long("display")
+                    .with_help("Converts the json to an easier format (will remove some data)."),
             ),
         Command::new("downloads", "Gives download count of releases as json")
             .with_arg(
@@ -69,6 +76,13 @@ fn main() {
                     .with_long("output")
                     .with_value_name("OUTPUT")
                     .with_help("File path to save the json"),
+            )
+            .with_arg(
+                Arg::new()
+                    .with_name("display")
+                    .with_short('d')
+                    .with_long("display")
+                    .with_help("Converts the json to an easier format (will remove some data)."),
             ),
         Command::new(
             "releases",
@@ -97,6 +111,13 @@ fn main() {
                 .with_long("output")
                 .with_value_name("OUTPUT")
                 .with_help("File path to save the json"),
+        )
+        .with_arg(
+            Arg::new()
+                .with_name("display")
+                .with_short('d')
+                .with_long("display")
+                .with_help("Converts the json to an easier format (will remove some data)."),
         ),
         Command::new("help", "Helps you with the commands").with_short('h'),
     ]);
@@ -109,6 +130,7 @@ fn main() {
             let owner = command.get_value_of("owner").throw_if_none();
             let repo = command.get_value_of("repository").throw_if_none();
             let output = command.get_value_of("output").to_option();
+            let display = command.has("display");
         }
         "downloads" => {
             let owner = command.get_value_of("owner").throw_if_none();
@@ -116,11 +138,13 @@ fn main() {
             let individual = command.has("individual");
             let link = command.has("link");
             let output = command.get_value_of("output").to_option();
+            let display = command.has("display");
         }
         "releases" => {
             let owner = command.get_value_of("owner").throw_if_none();
             let repo = command.get_value_of("repository").throw_if_none();
             let output = command.get_value_of("output").to_option();
+            let display = command.has("display");
         }
         "help" => cli.help(),
         _ => cli.help(),
