@@ -1,22 +1,29 @@
 use crate::utils::{pretty_dates, request};
 use serde_json::Value;
+use std::path::PathBuf;
 
 pub fn all(
     owner: String,
     repo: String,
-    output: Option<String>,
+    output: Option<PathBuf>,
     display: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    //TODO: handle no repo/private repo
     let url = format!("https://api.github.com/repos/{}/{}", owner, repo);
 
     let json = request(url)?;
+
+    if &json["message"] == "Not Found" {
+        println!("Repository not found.");
+        return Ok(());
+    }
 
     if !display {
         println!("{:#?}", json);
     } else {
         simplify_and_display_json(json)
     }
+
+    
 
     Ok(())
 }

@@ -14,7 +14,7 @@ pub fn request(url: String) -> Result<Value, Box<dyn std::error::Error>> {
 
 fn construct_header() -> HeaderMap {
     let mut headers = HeaderMap::new();
-    headers.insert(USER_AGENT, "User".parse().unwrap());
+    headers.insert(USER_AGENT, "GSTATS".parse().unwrap());
     headers.insert(ACCEPT, "application/vnd.github.v3+json".parse().unwrap());
     return headers;
 }
@@ -25,14 +25,18 @@ pub fn pretty_dates(date: &str) -> String {
     format!("{}-{}-{}", date[2], date[1], date[0])
 }
 
-pub fn validate_path(path: String) -> Result<PathBuf, String> {
+pub fn validate_and_convert_path(path: String) -> Result<PathBuf, String> {
     let real_path = Path::new(&path);
 
-    if !real_path.exists() {
-        return Err(format!("Failed to find path \"{}\"", path));
+    if real_path.is_file() {
+        println!("A file was found at the path: \"{}\"", path);
+        println!("Would you like to clear the file and continue? [y/N]");
+        let mut input = String::new();
+        std::io::stdin().read_line(&mut input).unwrap();
+        if input.trim().to_lowercase() != "y" {
+            return Err("A file already exists at the path.".to_owned());
+        }
     }
-
-    
 
     Ok(real_path.to_owned())
 }

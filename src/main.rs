@@ -2,8 +2,11 @@ pub mod cli;
 pub mod commands;
 pub mod utils;
 
+use std::process::Output;
+
+use crate::cli::{Arg, Cli, Command};
 use crate::commands::all::all;
-use cli::{Arg, Cli, Command};
+use crate::utils::validate_and_convert_path;
 
 fn main() {
     let cli = Cli::new().with_default_command("help").with_commands(vec![
@@ -134,6 +137,17 @@ fn main() {
             let repo = command.get_value_of("repository").throw_if_none();
             let output = command.get_value_of("output").to_option();
             let display = command.has("display");
+
+            let output = match output {
+                Some(path) => match validate_and_convert_path(path) {
+                    Ok(real_path) => Some(real_path),
+                    Err(err) => {
+                        println!("{}", err);
+                        std::process::exit(0)
+                    }
+                },
+                None => None,
+            };
 
             let _ = all(owner, repo, output, display);
         }
