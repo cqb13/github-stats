@@ -2,8 +2,6 @@ pub mod cli;
 pub mod commands;
 pub mod utils;
 
-use std::process::Output;
-
 use crate::cli::{Arg, Cli, Command};
 use crate::commands::all::all;
 use crate::utils::validate_and_convert_path;

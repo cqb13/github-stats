@@ -1,4 +1,4 @@
-use crate::utils::{pretty_dates, request};
+use crate::utils::{pretty_dates, request, write_json_to_file};
 use serde_json::Value;
 use std::path::PathBuf;
 
@@ -20,15 +20,24 @@ pub fn all(
     if !display {
         println!("{:#?}", json);
     } else {
-        simplify_and_display_json(json)
+        simplify_and_display_json(&json)
     }
 
-    
+    match output {
+        Some(path) => {
+            let result = write_json_to_file(json, path);
+            match result {
+                Ok(_) => {}
+                Err(err) => println!("{}", err),
+            }
+        }
+        None => {}
+    }
 
     Ok(())
 }
 
-fn simplify_and_display_json(json: Value) {
+fn simplify_and_display_json(json: &Value) {
     // General Info
     let name = &json["name"].as_str().unwrap_or("None");
     let description = &json["description"].as_str().unwrap_or("None");
