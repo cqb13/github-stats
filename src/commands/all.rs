@@ -68,12 +68,16 @@ fn simplify_and_display_json(json: Value) {
     println!("REPOSITORY URLS");
     println!("    {:<14}: {}", "HTML URL", html_url);
     println!("    {:<14}: {}", "Clone URL", clone_url);
-    println!("    {:<14}: {}", "Homepage", homepage);
+    if homepage != &"" && homepage != &"None" {
+        println!("    {:<14}: {}", "Homepage", homepage);
+    }
     println!();
     println!("DEVELOPMENT DETAILS");
     println!("    {:<14}: {}", "Language", language);
     println!("    {:<14}: {}", "Default branch", default_branch);
-    println!("    {:<14}: {}", "License", license);
+    if license != &"None" {
+        println!("    {:<14}: {}", "License", license);
+    }
     println!();
     println!("IMPORTANT DATES");
     println!("    {:<14}: {}", "Created at", pretty_dates(created_at));
