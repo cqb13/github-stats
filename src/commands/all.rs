@@ -7,6 +7,7 @@ pub fn all(
     output: Option<String>,
     display: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    //TODO: handle no repo/private repo
     let url = format!("https://api.github.com/repos/{}/{}", owner, repo);
 
     let json = request(url)?;
