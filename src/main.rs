@@ -1,5 +1,6 @@
 pub mod cli;
 pub mod commands;
+pub mod utils;
 
 use crate::commands::all::all;
 use cli::{Arg, Cli, Command};
@@ -134,7 +135,7 @@ fn main() {
             let output = command.get_value_of("output").to_option();
             let display = command.has("display");
 
-            all(owner, repo);
+            let _ = all(owner, repo, output, display);
         }
         "downloads" => {
             let owner = command.get_value_of("owner").throw_if_none();
