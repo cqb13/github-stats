@@ -3,7 +3,8 @@ pub mod commands;
 pub mod utils;
 
 use crate::cli::{Arg, Cli, Command};
-use crate::commands::all::all;
+use crate::commands::all::all_command;
+use crate::commands::downloads::downloads_command;
 use crate::utils::validate_and_convert_path;
 
 fn main() {
@@ -83,6 +84,13 @@ fn main() {
             )
             .with_arg(
                 Arg::new()
+                    .with_name("all")
+                    .with_short('a')
+                    .with_long("all")
+                    .with_help("All json from request"),
+            )
+            .with_arg(
+                Arg::new()
                     .with_name("display")
                     .with_short('d')
                     .with_long("display")
@@ -118,6 +126,13 @@ fn main() {
         )
         .with_arg(
             Arg::new()
+                .with_name("all")
+                .with_short('a')
+                .with_long("all")
+                .with_help("All json from request"),
+        )
+        .with_arg(
+            Arg::new()
                 .with_name("display")
                 .with_short('d')
                 .with_long("display")
@@ -136,18 +151,9 @@ fn main() {
             let output = command.get_value_of("output").to_option();
             let display = command.has("display");
 
-            let output = match output {
-                Some(path) => match validate_and_convert_path(path) {
-                    Ok(real_path) => Some(real_path),
-                    Err(err) => {
-                        println!("{}", err);
-                        std::process::exit(0)
-                    }
-                },
-                None => None,
-            };
+            let output = output_to_path(output);
 
-            let _ = all(owner, repo, output, display);
+            all_command(owner, repo, output, display);
         }
         "downloads" => {
             let owner = command.get_value_of("owner").throw_if_none();
@@ -155,15 +161,35 @@ fn main() {
             let individual = command.has("individual");
             let link = command.has("link");
             let output = command.get_value_of("output").to_option();
+            let all = command.has("all");
             let display = command.has("display");
+
+            let output = output_to_path(output);
+
+            downloads_command(owner, repo, individual, link, output, all, display);
         }
         "releases" => {
             let owner = command.get_value_of("owner").throw_if_none();
             let repo = command.get_value_of("repository").throw_if_none();
             let output = command.get_value_of("output").to_option();
+            let all = command.has("all");
             let display = command.has("display");
+
         }
         "help" => cli.help(),
         _ => cli.help(),
+    }
+}
+
+fn output_to_path(output: Option<String>) -> Option<std::path::PathBuf> {
+    match output {
+        Some(path) => match validate_and_convert_path(path) {
+            Ok(real_path) => Some(real_path),
+            Err(err) => {
+                println!("{}", err);
+                std::process::exit(0)
+            }
+        },
+        None => None,
     }
 }

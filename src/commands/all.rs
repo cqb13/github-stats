@@ -2,19 +2,14 @@ use crate::utils::{pretty_dates, request, write_json_to_file};
 use serde_json::Value;
 use std::path::PathBuf;
 
-pub fn all(
-    owner: String,
-    repo: String,
-    output: Option<PathBuf>,
-    display: bool,
-) -> Result<(), Box<dyn std::error::Error>> {
+pub fn all_command(owner: String, repo: String, output: Option<PathBuf>, display: bool) {
     let url = format!("https://api.github.com/repos/{}/{}", owner, repo);
 
-    let json = request(url)?;
+    let json = request(url).expect("Failed to request data");
 
     if &json["message"] == "Not Found" {
         println!("Repository not found.");
-        return Ok(());
+        std::process::exit(0)
     }
 
     if !display {
@@ -33,8 +28,6 @@ pub fn all(
         }
         None => {}
     }
-
-    Ok(())
 }
 
 fn simplify_and_display_json(json: &Value) {
