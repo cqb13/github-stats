@@ -1,4 +1,4 @@
-use crate::utils::{pretty_dates, request, write_json_to_file};
+use crate::utils::{bytes_to_best_size, pretty_dates, request, write_json_to_file};
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::Value;
 use std::{path::PathBuf, vec};
@@ -11,6 +11,7 @@ pub struct DownloadData {
     pub html_url: String,
     pub body: String,
     pub assets: Vec<Asset>,
+    pub downloads: i64,
 }
 
 impl DownloadData {
@@ -30,7 +31,24 @@ impl DownloadData {
             html_url,
             body,
             assets: Vec::new(),
+            downloads: 0,
         }
+    }
+
+    pub fn display(&self) {
+        println!("{} - {:>10}", self.name.to_ascii_uppercase(), self.tag);
+        if self.body != "" {
+            println!("    {}", self.body);
+        }
+        println!("    {:<14}: {}", "HTML URL", self.html_url);
+        println!("    {:<14}: {}", "Downloads", self.downloads);
+        println!("    {:<14}: {}", "Created at", self.created_at);
+        println!("    {:<14}: {}", "Published at", self.published_at);
+        println!("    {:<14}: {}", "ASSETS", self.assets.len());
+        for asset in &self.assets {
+            asset.display();
+        }
+        println!();
     }
 }
 
@@ -61,6 +79,19 @@ impl Asset {
             updated_at,
         }
     }
+
+    pub fn display(&self) {
+        println!(
+            "    {:<14}: {}",
+            self.name.to_uppercase(),
+            bytes_to_best_size(self.size)
+        );
+        println!("        {:<14}: {}", "Download URL", self.download_url);
+        println!("        {:<14}: {}", "Downloads", self.downloads);
+        println!("        {:<14}: {}", "Created at", self.created_at);
+        println!("        {:<14}: {}", "Updated at", self.updated_at);
+        println!()
+    }
 }
 
 pub fn downloads_command(
@@ -86,13 +117,16 @@ pub fn downloads_command(
         std::process::exit(0)
     }
 
-    let simple_data = simplify_json_release_data(&json);
-    println!("amount: {}", simple_data.len());
-
     if all && !display {
         println!("{:#?}", json);
     } else if all && display {
-        // show the json without all, but in pretty format
+        let simple_data = simplify_json_release_data(&json);
+        let mut download_count = 0;
+        for release in simple_data {
+            release.display();
+            download_count += release.downloads;
+        }
+        println!("Total Downloads: {}", download_count);
     } else if !all && !display {
         // if individual, get latest download url, and sum all item count
         // {download_url: Vec<(String name, String link for each asset of latest)>, html_url: String, download_count: i32}
@@ -127,8 +161,8 @@ fn simplify_json_release_data(json: &Value) -> Vec<DownloadData> {
         let mut download = DownloadData::new(
             name.to_string(),
             tag.to_string(),
-            published_at.to_string(),
-            created_at.to_string(),
+            pretty_dates(&published_at),
+            pretty_dates(&created_at),
             html_url.to_string(),
             body.to_string(),
         );
@@ -146,13 +180,14 @@ fn simplify_json_release_data(json: &Value) -> Vec<DownloadData> {
 
             let asset = Asset::new(
                 download_url.to_string(),
-                created_at.to_string(),
+                pretty_dates(&created_at),
                 downloads.to_owned(),
                 name.to_string(),
                 size.to_owned(),
-                updated_at.to_string(),
+                pretty_dates(&updated_at),
             );
 
+            download.downloads += downloads;
             download.assets.push(asset);
         }
 

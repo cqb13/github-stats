@@ -174,7 +174,6 @@ fn main() {
             let output = command.get_value_of("output").to_option();
             let all = command.has("all");
             let display = command.has("display");
-
         }
         "help" => cli.help(),
         _ => cli.help(),

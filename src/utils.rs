@@ -69,3 +69,30 @@ pub fn write_json_to_file(json: Value, mut path: PathBuf) -> Result<(), String> 
 
     Ok(())
 }
+
+pub fn bytes_to_best_size(bytes: i64) -> String {
+    let mut size = bytes as f64;
+    let mut unit = "B";
+
+    if size > 1024.0 {
+        size /= 1024.0;
+        unit = "KB";
+    }
+
+    if size > 1024.0 {
+        size /= 1024.0;
+        unit = "MB";
+    }
+
+    if size > 1024.0 {
+        size /= 1024.0;
+        unit = "GB";
+    }
+
+    if size > 1024.0 {
+        size /= 1024.0;
+        unit = "TB";
+    }
+
+    format!("{:.2} {}", size, unit)
+}
