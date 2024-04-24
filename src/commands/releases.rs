@@ -174,7 +174,7 @@ pub fn releases_command(
 fn write_json(json_string: String, output: Option<PathBuf>) {
     match output {
         Some(path) => {
-            let result = write_to_file(serde_json::to_string_pretty(&json_string).unwrap(), path);
+            let result = write_to_file(json_string, path);
             match result {
                 Ok(_) => {}
                 Err(err) => println!("{}", err),

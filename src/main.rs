@@ -5,6 +5,7 @@ pub mod utils;
 use crate::cli::{Arg, Cli, Command};
 use crate::commands::all::all_command;
 use crate::commands::releases::releases_command;
+use crate::commands::user::user_command;
 use crate::utils::validate_and_convert_path;
 
 fn main() {
@@ -128,17 +129,17 @@ fn main() {
     match command.name {
         "version" => cli.version(),
         "all" => {
-            let owner = command.get_value_of("owner").throw_if_none();
+            let user = command.get_value_of("user").throw_if_none();
             let repo = command.get_value_of("repository").throw_if_none();
             let output = command.get_value_of("output").to_option();
             let display = command.has("display");
 
             let output = output_to_path(output);
 
-            all_command(owner, repo, output, display);
+            all_command(user, repo, output, display);
         }
         "releases" => {
-            let owner = command.get_value_of("owner").throw_if_none();
+            let user = command.get_value_of("user").throw_if_none();
             let repo = command.get_value_of("repository").throw_if_none();
             let individual = command.has("individual");
             let link = command.has("link");
@@ -148,7 +149,16 @@ fn main() {
 
             let output = output_to_path(output);
 
-            releases_command(owner, repo, individual, link, output, all, display);
+            releases_command(user, repo, individual, link, output, all, display);
+        }
+        "user" => {
+            let user = command.get_value_of("user").throw_if_none();
+            let output = command.get_value_of("output").to_option();
+            let display = command.has("display");
+
+            let output = output_to_path(output);
+
+            user_command(user, output, display);
         }
         "help" => cli.help(),
         _ => cli.help(),
