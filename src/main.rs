@@ -8,6 +8,7 @@ use crate::commands::downloads::downloads_command;
 use crate::utils::validate_and_convert_path;
 
 fn main() {
+    //TODO: command to show info about a user
     let cli = Cli::new().with_default_command("help").with_commands(vec![
         Command::new("version", "Displays the current version of github-stats").with_short('v'),
         Command::new("install", "Installs the files and directories"),

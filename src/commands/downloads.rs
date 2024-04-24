@@ -117,10 +117,11 @@ pub fn downloads_command(
         std::process::exit(0)
     }
 
+    let simple_data = simplify_json_release_data(&json);
+
     if all && !display {
         println!("{:#?}", json);
     } else if all && display {
-        let simple_data = simplify_json_release_data(&json);
         let mut download_count = 0;
         for release in simple_data {
             release.display();
@@ -130,6 +131,22 @@ pub fn downloads_command(
     } else if !all && !display {
         // if individual, get latest download url, and sum all item count
         // {download_url: Vec<(String name, String link for each asset of latest)>, html_url: String, download_count: i32}
+    } else if !all && display {
+        let mut download_count = 0;
+        for release in &simple_data {
+            download_count += release.downloads;
+            if individual {
+                print!("{} - {}", release.downloads, release.created_at);
+                if link {
+                    print!(" - {}", release.html_url);
+                }
+                println!()
+            }
+        }
+        println!("Total Downloads: {}", download_count);
+        if link {
+            println!("Latest Release: {}", simple_data[0].html_url)
+        }
     }
 
     match output {
