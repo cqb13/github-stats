@@ -6,7 +6,7 @@ use crate::cli::{Arg, Cli, Command};
 use crate::commands::all::all_command;
 use crate::commands::releases::releases_command;
 use crate::commands::user::user_command;
-use crate::utils::validate_and_convert_path;
+use crate::utils::{install, validate_and_convert_path, OS};
 
 fn main() {
     let cli = Cli::new().with_default_command("help").with_commands(vec![
@@ -128,6 +128,15 @@ fn main() {
 
     match command.name {
         "version" => cli.version(),
+        "install" => {
+            let os = match std::env::consts::OS {
+                "windows" => OS::Windows,
+                "macos" => OS::Mac,
+                _ => panic!("Unsupported OS"),
+            };
+
+            install(&os);
+        }
         "all" => {
             let user = command.get_value_of("user").throw_if_none();
             let repo = command.get_value_of("repository").throw_if_none();
