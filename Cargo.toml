@@ -17,7 +17,7 @@ exclude = [".gitignore", ".github/*"]
 [dependencies]
 reqwest = { version = "0.12", features = ["json", "blocking"] }
 serde_json = "1.0"
-serde = "1.0"
+serde = { version = "1.0", features = ["derive"] }
 
 [[bin]]
 name = "gstats"

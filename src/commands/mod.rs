@@ -1,2 +1,2 @@
 pub mod all;
-pub mod downloads;
+pub mod releases;

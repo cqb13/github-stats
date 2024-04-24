@@ -1,9 +1,10 @@
 use crate::utils::{bytes_to_best_size, pretty_dates, request, write_json_to_file};
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::{path::PathBuf, vec};
+use std::path::PathBuf;
 
-pub struct DownloadData {
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct ReleaseData {
     pub name: String,
     pub tag: String,
     pub published_at: String,
@@ -14,7 +15,7 @@ pub struct DownloadData {
     pub downloads: i64,
 }
 
-impl DownloadData {
+impl ReleaseData {
     pub fn new(
         name: String,
         tag: String,
@@ -22,8 +23,8 @@ impl DownloadData {
         created_at: String,
         html_url: String,
         body: String,
-    ) -> DownloadData {
-        DownloadData {
+    ) -> ReleaseData {
+        ReleaseData {
             name,
             tag,
             published_at,
@@ -52,6 +53,7 @@ impl DownloadData {
     }
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Asset {
     pub download_url: String,
     pub created_at: String,
@@ -94,7 +96,7 @@ impl Asset {
     }
 }
 
-pub fn downloads_command(
+pub fn releases_command(
     owner: String,
     repo: String,
     individual: bool,
@@ -120,17 +122,31 @@ pub fn downloads_command(
     let simple_data = simplify_json_release_data(&json);
 
     if all && !display {
-        println!("{:#?}", json);
+        println!("{}", serde_json::to_string_pretty(&json).unwrap());
     } else if all && display {
         let mut download_count = 0;
-        for release in simple_data {
+        for release in &simple_data {
             release.display();
             download_count += release.downloads;
         }
         println!("Total Downloads: {}", download_count);
+        if link {
+            println!("Latest Release: {}", simple_data[0].html_url)
+        }
     } else if !all && !display {
-        // if individual, get latest download url, and sum all item count
-        // {download_url: Vec<(String name, String link for each asset of latest)>, html_url: String, download_count: i32}
+        if individual {
+            println!("{}", serde_json::to_string_pretty(&simple_data).unwrap());
+        } else {
+            let mut overview = simple_data[0].clone();
+            let mut download_count = 0;
+            for release in &simple_data {
+                download_count += release.downloads;
+            }
+
+            overview.downloads = download_count;
+
+            println!("{}", serde_json::to_string_pretty(&overview).unwrap());
+        }
     } else if !all && display {
         let mut download_count = 0;
         for release in &simple_data {
@@ -161,8 +177,8 @@ pub fn downloads_command(
     }
 }
 
-fn simplify_json_release_data(json: &Value) -> Vec<DownloadData> {
-    let mut download_data: Vec<DownloadData> = Vec::new();
+fn simplify_json_release_data(json: &Value) -> Vec<ReleaseData> {
+    let mut download_data: Vec<ReleaseData> = Vec::new();
 
     for release in json.as_array().unwrap() {
         let name = &release["name"].as_str().unwrap_or("None").to_string();
@@ -175,7 +191,7 @@ fn simplify_json_release_data(json: &Value) -> Vec<DownloadData> {
         let html_url = &release["html_url"].as_str().unwrap_or("None").to_string();
         let body = &release["body"].as_str().unwrap_or("None").to_string();
 
-        let mut download = DownloadData::new(
+        let mut download = ReleaseData::new(
             name.to_string(),
             tag.to_string(),
             pretty_dates(&published_at),

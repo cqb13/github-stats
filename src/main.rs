@@ -4,7 +4,7 @@ pub mod utils;
 
 use crate::cli::{Arg, Cli, Command};
 use crate::commands::all::all_command;
-use crate::commands::downloads::downloads_command;
+use crate::commands::releases::releases_command;
 use crate::utils::validate_and_convert_path;
 
 fn main() {
@@ -44,7 +44,7 @@ fn main() {
                     .with_long("display")
                     .with_help("Converts the json to an easier format (will remove some data)."),
             ),
-        Command::new("downloads", "Gives download count of releases as json")
+        Command::new("releases", "Gives information on github releases")
             .with_arg(
                 Arg::new()
                     .with_name("owner")
@@ -97,48 +97,6 @@ fn main() {
                     .with_long("display")
                     .with_help("Converts the json to an easier format (will remove some data)."),
             ),
-        Command::new(
-            "releases",
-            "Gives names and download links for all releases as json",
-        )
-        .with_arg(
-            Arg::new()
-                .with_name("owner")
-                .with_short('o')
-                .with_long("owner")
-                .with_value_name("OWNER")
-                .with_help("Owner of the repository"),
-        )
-        .with_arg(
-            Arg::new()
-                .with_name("repository")
-                .with_short('r')
-                .with_long("repository")
-                .with_value_name("REPOSITORY")
-                .with_help("Name of the repository"),
-        )
-        .with_arg(
-            Arg::new()
-                .with_name("output")
-                .with_short('f')
-                .with_long("output")
-                .with_value_name("OUTPUT")
-                .with_help("File path to save the json"),
-        )
-        .with_arg(
-            Arg::new()
-                .with_name("all")
-                .with_short('a')
-                .with_long("all")
-                .with_help("All json from request"),
-        )
-        .with_arg(
-            Arg::new()
-                .with_name("display")
-                .with_short('d')
-                .with_long("display")
-                .with_help("Converts the json to an easier format (will remove some data)."),
-        ),
         Command::new("help", "Helps you with the commands").with_short('h'),
     ]);
 
@@ -156,7 +114,7 @@ fn main() {
 
             all_command(owner, repo, output, display);
         }
-        "downloads" => {
+        "releases" => {
             let owner = command.get_value_of("owner").throw_if_none();
             let repo = command.get_value_of("repository").throw_if_none();
             let individual = command.has("individual");
@@ -167,14 +125,7 @@ fn main() {
 
             let output = output_to_path(output);
 
-            downloads_command(owner, repo, individual, link, output, all, display);
-        }
-        "releases" => {
-            let owner = command.get_value_of("owner").throw_if_none();
-            let repo = command.get_value_of("repository").throw_if_none();
-            let output = command.get_value_of("output").to_option();
-            let all = command.has("all");
-            let display = command.has("display");
+            releases_command(owner, repo, individual, link, output, all, display);
         }
         "help" => cli.help(),
         _ => cli.help(),
