@@ -1,4 +1,4 @@
-use crate::utils::{bytes_to_best_size, pretty_dates, request, write_json_to_file};
+use crate::utils::{bytes_to_best_size, pretty_dates, request, write_to_file};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::path::PathBuf;
@@ -123,6 +123,7 @@ pub fn releases_command(
 
     if all && !display {
         println!("{}", serde_json::to_string_pretty(&json).unwrap());
+        write_json(serde_json::to_string_pretty(&json).unwrap(), output);
     } else if all && display {
         let mut download_count = 0;
         for release in &simple_data {
@@ -133,9 +134,11 @@ pub fn releases_command(
         if link {
             println!("Latest Release: {}", simple_data[0].html_url)
         }
+        write_json(serde_json::to_string_pretty(&simple_data).unwrap(), output);
     } else if !all && !display {
         if individual {
             println!("{}", serde_json::to_string_pretty(&simple_data).unwrap());
+            write_json(serde_json::to_string_pretty(&simple_data).unwrap(), output);
         } else {
             let mut overview = simple_data[0].clone();
             let mut download_count = 0;
@@ -146,6 +149,7 @@ pub fn releases_command(
             overview.downloads = download_count;
 
             println!("{}", serde_json::to_string_pretty(&overview).unwrap());
+            write_json(serde_json::to_string_pretty(&overview).unwrap(), output);
         }
     } else if !all && display {
         let mut download_count = 0;
@@ -163,11 +167,14 @@ pub fn releases_command(
         if link {
             println!("Latest Release: {}", simple_data[0].html_url)
         }
+        write_json(serde_json::to_string_pretty(&simple_data).unwrap(), output);
     }
+}
 
+fn write_json(json_string: String, output: Option<PathBuf>) {
     match output {
         Some(path) => {
-            let result = write_json_to_file(json, path);
+            let result = write_to_file(serde_json::to_string_pretty(&json_string).unwrap(), path);
             match result {
                 Ok(_) => {}
                 Err(err) => println!("{}", err),

@@ -49,7 +49,7 @@ pub fn validate_and_convert_path(path: String) -> Result<PathBuf, String> {
     Ok(real_path.to_owned())
 }
 
-pub fn write_json_to_file(json: Value, mut path: PathBuf) -> Result<(), String> {
+pub fn write_to_file(json_string: String, mut path: PathBuf) -> Result<(), String> {
     if path.extension().is_none() {
         path.push("gstats-output.json");
     }
@@ -64,7 +64,7 @@ pub fn write_json_to_file(json: Value, mut path: PathBuf) -> Result<(), String> 
     };
 
     let mut writer = BufWriter::new(file);
-    let json_string = serde_json::to_string_pretty(&json).unwrap();
+    let json_string = json_string;
     writer.write_all(json_string.as_bytes()).unwrap();
 
     Ok(())

@@ -1,4 +1,4 @@
-use crate::utils::{pretty_dates, request, write_json_to_file};
+use crate::utils::{pretty_dates, request, write_to_file};
 use serde_json::Value;
 use std::path::PathBuf;
 
@@ -20,7 +20,7 @@ pub fn all_command(owner: String, repo: String, output: Option<PathBuf>, display
 
     match output {
         Some(path) => {
-            let result = write_json_to_file(json, path);
+            let result = write_to_file(serde_json::to_string_pretty(&json).unwrap(), path);
             match result {
                 Ok(_) => {}
                 Err(err) => println!("{}", err),
