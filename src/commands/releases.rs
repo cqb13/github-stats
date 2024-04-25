@@ -188,42 +188,42 @@ fn simplify_json_release_data(json: &Value) -> Vec<ReleaseData> {
     let mut download_data: Vec<ReleaseData> = Vec::new();
 
     for release in json.as_array().unwrap() {
-        let name = &release["name"].as_str().unwrap_or("None").to_string();
-        let tag = &release["tag_name"].as_str().unwrap_or("None").to_string();
-        let published_at = &release["published_at"]
+        let name = release["name"].as_str().unwrap_or("None").to_string();
+        let tag = release["tag_name"].as_str().unwrap_or("None").to_string();
+        let published_at = release["published_at"]
             .as_str()
             .unwrap_or("None")
             .to_string();
-        let created_at = &release["created_at"].as_str().unwrap_or("None").to_string();
-        let html_url = &release["html_url"].as_str().unwrap_or("None").to_string();
-        let body = &release["body"].as_str().unwrap_or("None").to_string();
+        let created_at = release["created_at"].as_str().unwrap_or("None").to_string();
+        let html_url = release["html_url"].as_str().unwrap_or("None").to_string();
+        let body = release["body"].as_str().unwrap_or("None").to_string();
 
         let mut download = ReleaseData::new(
-            name.to_string(),
-            tag.to_string(),
+            name,
+            tag,
             pretty_dates(&published_at),
             pretty_dates(&created_at),
-            html_url.to_string(),
-            body.to_string(),
+            html_url,
+            body,
         );
 
         for asset in release["assets"].as_array().unwrap() {
-            let download_url = &asset["browser_download_url"]
+            let download_url = asset["browser_download_url"]
                 .as_str()
                 .unwrap_or("None")
                 .to_string();
-            let created_at = &asset["created_at"].as_str().unwrap_or("None").to_string();
-            let downloads = &asset["download_count"].as_i64().unwrap_or(0);
-            let name = &asset["name"].as_str().unwrap_or("None").to_string();
-            let size = &asset["size"].as_i64().unwrap_or(0);
-            let updated_at = &asset["updated_at"].as_str().unwrap_or("None").to_string();
+            let created_at = asset["created_at"].as_str().unwrap_or("None").to_string();
+            let downloads = asset["download_count"].as_i64().unwrap_or(0);
+            let name = asset["name"].as_str().unwrap_or("None").to_string();
+            let size = asset["size"].as_i64().unwrap_or(0);
+            let updated_at = asset["updated_at"].as_str().unwrap_or("None").to_string();
 
             let asset = Asset::new(
-                download_url.to_string(),
+                download_url,
                 pretty_dates(&created_at),
-                downloads.to_owned(),
-                name.to_string(),
-                size.to_owned(),
+                downloads,
+                name,
+                size,
                 pretty_dates(&updated_at),
             );
 
