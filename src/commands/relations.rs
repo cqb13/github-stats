@@ -36,9 +36,9 @@ pub fn relations_command(
     }
 
     if display {
-        for follower in json.as_array().unwrap() {
-            let username = follower["login"].as_str().unwrap_or("None");
-            let html_url = follower["html_url"].as_str().unwrap_or("None");
+        for relation in json.as_array().unwrap() {
+            let username = relation["login"].as_str().unwrap_or("None");
+            let html_url = relation["html_url"].as_str().unwrap_or("None");
             println!("{:<20} - {}", username, html_url);
             println!();
         }
