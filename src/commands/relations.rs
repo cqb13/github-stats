@@ -1,8 +1,32 @@
 use crate::utils::{request, write_to_file};
 use std::path::PathBuf;
 
-pub fn followers_command(user: String, total: bool, output: Option<PathBuf>, display: bool) {
-    let url = format!("https://api.github.com/users/{}/followers", user);
+pub enum RelationType {
+    Follower,
+    Following,
+}
+
+impl RelationType {
+    pub fn to_text(&self) -> String {
+        match self {
+            RelationType::Follower => "Followers".to_string(),
+            RelationType::Following => "Following".to_string(),
+        }
+    }
+}
+
+pub fn relations_command(
+    user: String,
+    total: bool,
+    output: Option<PathBuf>,
+    display: bool,
+    relation_type: RelationType,
+) {
+    let url = format!(
+        "https://api.github.com/users/{}/{}",
+        user,
+        relation_type.to_text().to_ascii_lowercase()
+    );
 
     let json = request(url).expect("Failed to request data");
 
@@ -19,11 +43,15 @@ pub fn followers_command(user: String, total: bool, output: Option<PathBuf>, dis
             println!();
         }
         if total {
-            println!("Followers: {}", json.as_array().unwrap().len())
+            println!(
+                "{}: {}",
+                relation_type.to_text(),
+                json.as_array().unwrap().len()
+            )
         }
     } else {
         let mut total_json = serde_json::Map::new();
-        total_json.insert("followers".to_string(), json.clone());
+        total_json.insert(relation_type.to_text().to_ascii_lowercase(), json.clone());
         if total {
             total_json.insert(
                 "total".to_string(),
@@ -40,7 +68,7 @@ pub fn followers_command(user: String, total: bool, output: Option<PathBuf>, dis
             "total".to_string(),
             serde_json::Value::Number(serde_json::Number::from(json.as_array().unwrap().len())),
         );
-        total_json.insert("followers".to_string(), json);
+        total_json.insert(relation_type.to_text().to_ascii_lowercase(), json);
 
         match output {
             Some(path) => {

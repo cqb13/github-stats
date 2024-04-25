@@ -4,7 +4,7 @@ pub mod utils;
 
 use crate::cli::{Arg, Cli, Command};
 use crate::commands::all::all_command;
-use crate::commands::followers::followers_command;
+use crate::commands::relations::{relations_command, RelationType};
 use crate::commands::releases::releases_command;
 use crate::commands::user::user_command;
 use crate::utils::{install, validate_and_convert_path, OS};
@@ -137,7 +137,39 @@ fn main() {
                     .with_short('t')
                     .with_long("total")
                     .with_value_name("TOTAL")
-                    .with_help("Only gives the follower count"),
+                    .with_help("Gives the follower count"),
+            )
+            .with_arg(
+                Arg::new()
+                    .with_name("output")
+                    .with_short('o')
+                    .with_long("output")
+                    .with_value_name("OUTPUT")
+                    .with_help("File path to save the json"),
+            )
+            .with_arg(
+                Arg::new()
+                    .with_name("display")
+                    .with_short('d')
+                    .with_long("display")
+                    .with_help("Converts the json to an easier format (will remove some data)"),
+            ),
+        Command::new("following", "Lists users the user is following")
+            .with_arg(
+                Arg::new()
+                    .with_name("user")
+                    .with_short('u')
+                    .with_long("user")
+                    .with_value_name("USER")
+                    .with_help("The user you want information on"),
+            )
+            .with_arg(
+                Arg::new()
+                    .with_name("total")
+                    .with_short('t')
+                    .with_long("total")
+                    .with_value_name("TOTAL")
+                    .with_help("Gives the following count"),
             )
             .with_arg(
                 Arg::new()
@@ -210,7 +242,17 @@ fn main() {
 
             let output = output_to_path(output);
 
-            followers_command(user, total, output, display);
+            relations_command(user, total, output, display, RelationType::Follower);
+        }
+        "following" => {
+            let user = command.get_value_of("user").throw_if_none();
+            let total = command.has("total");
+            let output = command.get_value_of("output").to_option();
+            let display = command.has("display");
+
+            let output = output_to_path(output);
+
+            relations_command(user, total, output, display, RelationType::Following);
         }
         "help" => cli.help(),
         _ => cli.help(),
