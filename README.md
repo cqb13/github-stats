@@ -53,8 +53,8 @@ COMMANDS:
         Displays the current version of github-stats
     install      -
         Installs the files and directories
-    all          -
-        Gives all stats found on a repository as json
+    repo         -
+        Gives general information about a repository
         -u           --user       <USER>       The user who owns the repository
         -r           --repository <REPOSITORY> Name of the repository
         -o           --output     <OUTPUT>     File path to save the json
@@ -86,6 +86,7 @@ COMMANDS:
         -o           --output     <OUTPUT>     File path to save the json
         -d           --display    <>           Converts the json to an easier format (will remove some data)
     help         -h
+        Helps you with the commands
 ```
 
 ## Contributing

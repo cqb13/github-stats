@@ -3,7 +3,7 @@ pub mod commands;
 pub mod utils;
 
 use crate::cli::{Arg, Cli, Command};
-use crate::commands::all::all_command;
+use crate::commands::repo::repo_command;
 use crate::commands::relations::{relations_command, RelationType};
 use crate::commands::releases::releases_command;
 use crate::commands::user::user_command;
@@ -13,7 +13,7 @@ fn main() {
     let cli = Cli::new().with_default_command("help").with_commands(vec![
         Command::new("version", "Displays the current version of github-stats").with_short('v'),
         Command::new("install", "Installs the files and directories"),
-        Command::new("all", "Gives all stats found on a repository as json")
+        Command::new("repo", "Gives general information about a repository")
             .with_arg(
                 Arg::new()
                     .with_name("user")
@@ -202,7 +202,7 @@ fn main() {
 
             install(&os);
         }
-        "all" => {
+        "repo" => {
             let user = command.get_value_of("user").throw_if_none();
             let repo = command.get_value_of("repository").throw_if_none();
             let output = command.get_value_of("output").to_option();
@@ -210,7 +210,7 @@ fn main() {
 
             let output = output_to_path(output);
 
-            all_command(user, repo, output, display);
+            repo_command(user, repo, output, display);
         }
         "releases" => {
             let user = command.get_value_of("user").throw_if_none();
