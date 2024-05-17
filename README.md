@@ -53,7 +53,7 @@ COMMANDS:
         Displays the current version of github-stats
     install      -
         Installs the files and directories
-    all          -
+    repo          -
         Gives all stats found on a repository as json
         -u           --user       <USER>       The user who owns the repository
         -r           --repository <REPOSITORY> Name of the repository

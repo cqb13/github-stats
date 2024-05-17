@@ -2,7 +2,7 @@ use crate::utils::{pretty_dates, request, write_to_file};
 use serde_json::Value;
 use std::path::PathBuf;
 
-pub fn all_command(owner: String, repo: String, output: Option<PathBuf>, display: bool) {
+pub fn repo_command(owner: String, repo: String, output: Option<PathBuf>, display: bool) {
     let url = format!("https://api.github.com/repos/{}/{}", owner, repo);
 
     let json = request(url).expect("Failed to request data");

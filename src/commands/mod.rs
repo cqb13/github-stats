@@ -1,4 +1,4 @@
-pub mod all;
-pub mod releases;
-pub mod user;
 pub mod relations;
+pub mod releases;
+pub mod repo;
+pub mod user;
