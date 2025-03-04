@@ -45,48 +45,55 @@ After installing `gstats`, you can run `gstats help` to see all available comman
 ## Usage
 
 ```bash
+
 USAGE:
-    github-stats [COMMAND] [OPTIONS]
+    gstats [COMMAND] [OPTIONS]
 
 COMMANDS:
-    version      -v
-        Displays the current version of github-stats
-    install      -
-        Installs the files and directories
-    repo         -
-        Gives general information about a repository
-        -u           --user       <USER>       The user who owns the repository
-        -r           --repository <REPOSITORY> Name of the repository
-        -o           --output     <OUTPUT>     File path to save the json
-        -d           --display    <>           Converts the json to an easier format (will remove some data)
-    releases     -
-        Gives information on github releases
-        -u           --user       <USER>       The user who owns the repository
-        -r           --repository <REPOSITORY> Name of the repository
-        -i           --individual <>           Downloads per release
-        -l           --link       <>           Download links for releases (if not individual then for latest)
-        -o           --output     <OUTPUT>     File path to save the json
-        -a           --all        <>           All json from request
-        -d           --display    <>           Converts the json to an easier format (will remove some data)
-    user         -
-        Gives information about a github user
-        -u           --user       <USER>       The user you want information on
-        -o           --output     <OUTPUT>     File path to save the json
-        -d           --display    <>           Converts the json to an easier format (will remove some data)
-    followers    -
-        Lists the followers of a github user
-        -u           --user       <USER>       The user you want information on
-        -t           --total      <TOTAL>      Gives the follower count
-        -o           --output     <OUTPUT>     File path to save the json
-        -d           --display    <>           Converts the json to an easier format (will remove some data)
-    following    -
-        Lists users the user is following
-        -u           --user       <USER>       The user you want information on
-        -t           --total      <TOTAL>      Gives the following count
-        -o           --output     <OUTPUT>     File path to save the json
-        -d           --display    <>           Converts the json to an easier format (will remove some data)
-    help         -h
-        Helps you with the commands
+    help - Prints help information
+        command       <COMMAND>                     (optional) The command you want help with
+
+    version - Prints version information
+
+    install - Installs the files and directories
+
+    repo - Displays general information about a repositoy
+        user          <USER>                        (required) The user who owns the repository
+        repository    <REPOSITORY>                  (required) The name of the repository
+        -o            --output       <OUTPUT>                  File path to save the json
+        -d            --display                                Converts the json to an easier format (will remove some data)
+
+    repo - Displays general information about a repositoy
+        user          <USER>                        (required) The user who owns the repository
+        repository    <REPOSITORY>                  (required) The name of the repository
+        -o            --output       <OUTPUT>                  File path to save the json
+        -d            --display                                Converts the json to an easier format (will remove some data)
+
+    releases - Displays informatiom about github releases
+        user          <USER>                        (required) The user who owns the repository
+        repository    <REPOSITORY>                  (required) The name of the repository
+        -i            --individual                             Displays downloads per release along with total downloads
+        -l            --link                                   Displays download links for releases (if not individiual then for latest)
+        -o            --output       <OUTPUT>                  File path to save the json
+        -a            --all                                    Saves all the json from the request insteaad of a cleaned up version
+        -d            --display                                Converts the json to an easier format (will remove some data)
+
+    user - Displays information about a github user
+        user          <USER>                        (required) The user who owns the repository
+        -o            --output       <OUTPUT>                  File path to save the json
+        -d            --display                                Converts the json to an easier format (will remove some data)
+
+    followers - Displays the followers of a github user
+        user          <USER>                        (required) The user who owns the repository
+        -t            --toal                                   Displays the total follower count
+        -o            --output       <OUTPUT>                  File path to save the json
+        -d            --display                                Converts the json to an easier format (will remove some data)
+
+    following - Displays the users a github user is following
+        user          <USER>                        (required) The user who owns the repository
+        -t            --toal                                   Displays the total follower count
+        -o            --output       <OUTPUT>                  File path to save the json
+        -d            --display                                Converts the json to an easier format (will remove some data)
 ```
 
 ## Contributing
