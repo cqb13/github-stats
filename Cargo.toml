@@ -1,10 +1,6 @@
 [package]
 name = "github-stats"
-<<<<<<< HEAD
 version = "0.1.1"
-=======
-version = "0.1.2"
->>>>>>> refs/remotes/origin/main
 edition = "2021"
 authors = ["cqb13 <cqb13.dev@gmail.com>"]
 license = "MIT"
