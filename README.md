@@ -50,6 +50,7 @@ USAGE:
     gstats [COMMAND] [OPTIONS]
 
 COMMANDS:
+<<<<<<< HEAD
     help - Prints help information
         command       <COMMAND>                     (optional) The command you want help with
 
@@ -94,6 +95,45 @@ COMMANDS:
         -t            --toal                                   Displays the total follower count
         -o            --output       <OUTPUT>                  File path to save the json
         -d            --display                                Converts the json to an easier format (will remove some data)
+=======
+    version      -v
+        Displays the current version of github-stats
+    install      -
+        Installs the files and directories
+    repo          -
+        Gives all stats found on a repository as json
+        -u           --user       <USER>       The user who owns the repository
+        -r           --repository <REPOSITORY> Name of the repository
+        -o           --output     <OUTPUT>     File path to save the json
+        -d           --display    <>           Converts the json to an easier format (will remove some data)
+    releases     -
+        Gives information on github releases
+        -u           --user       <USER>       The user who owns the repository
+        -r           --repository <REPOSITORY> Name of the repository
+        -i           --individual <>           Downloads per release
+        -l           --link       <>           Download links for releases (if not individual then for latest)
+        -o           --output     <OUTPUT>     File path to save the json
+        -a           --all        <>           All json from request
+        -d           --display    <>           Converts the json to an easier format (will remove some data)
+    user         -
+        Gives information about a github user
+        -u           --user       <USER>       The user you want information on
+        -o           --output     <OUTPUT>     File path to save the json
+        -d           --display    <>           Converts the json to an easier format (will remove some data)
+    followers    -
+        Lists the followers of a github user
+        -u           --user       <USER>       The user you want information on
+        -t           --total      <TOTAL>      Gives the follower count
+        -o           --output     <OUTPUT>     File path to save the json
+        -d           --display    <>           Converts the json to an easier format (will remove some data)
+    following    -
+        Lists users the user is following
+        -u           --user       <USER>       The user you want information on
+        -t           --total      <TOTAL>      Gives the following count
+        -o           --output     <OUTPUT>     File path to save the json
+        -d           --display    <>           Converts the json to an easier format (will remove some data)
+    help         -h
+>>>>>>> refs/remotes/origin/main
 ```
 
 ## Contributing

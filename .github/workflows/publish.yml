@@ -52,22 +52,22 @@ jobs:
         run: |
           choco install zip
           cd target/${{ matrix.target }}/release
-          zip gstats-0.1.1-${{ matrix.target }}.zip gstats.exe
+          zip gstats-0.1.2-${{ matrix.target }}.zip gstats.exe
           cd ../../..
 
       - name: Create tar.gz file on macOS
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
           chmod +x target/${{ matrix.target }}/release/gstats
-          tar -zcf target/${{ matrix.target }}/release/gstats-0.1.1-${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release gstats
+          tar -zcf target/${{ matrix.target }}/release/gstats-0.1.2-${{ matrix.target }}.tar.gz -C target/${{ matrix.target }}/release gstats
           chmod +x target/${{ matrix.target2 }}/release/gstats
-          tar -zcf target/${{ matrix.target2 }}/release/gstats-0.1.1-${{ matrix.target2 }}.tar.gz -C target/${{ matrix.target2 }}/release gstats
+          tar -zcf target/${{ matrix.target2 }}/release/gstats-0.1.2-${{ matrix.target2 }}.tar.gz -C target/${{ matrix.target2 }}/release gstats
 
       - name: Upload release and assets to GitHub
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "release-0.1.1-${{ github.run_number }}"
-          release_name: gstats 0.1.1
+          tag: "release-0.1.2-${{ github.run_number }}"
+          release_name: gstats 0.1.2
           file_glob: true
-          file: target/*/release/gstats-0.1.1-*.{zip,tar.gz}
+          file: target/*/release/gstats-0.1.2-*.{zip,tar.gz}
