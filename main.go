@@ -13,6 +13,7 @@ type Command int
 const (
 	Downloads Command = 0
 	Help      Command = 1
+	Repo      Command = 2
 )
 
 func main() {
@@ -31,6 +32,8 @@ func main() {
 		return
 	}
 
+	verbose := flags.GetBool("verbose")
+
 	switch command {
 	case Downloads:
 		if len(args) < 3 {
@@ -40,12 +43,22 @@ func main() {
 
 		user := posArgs[1]
 		repo := posArgs[2]
-		verbose := flags.GetBool("verbose")
 
 		commands.HandleDownloadsCommand(user, repo, verbose)
 		return
 	case Help:
 		commands.Help()
+		return
+	case Repo:
+		if len(args) < 3 {
+			fmt.Println("Not enough args: downloads user repo")
+			return
+		}
+
+		user := posArgs[1]
+		repo := posArgs[2]
+
+		commands.HandleRepoCommand(user, repo, verbose)
 		return
 	default:
 		fmt.Printf("%s is not a valid command\n", args[0])
@@ -59,6 +72,8 @@ func matchCommand(cmd string) (Command, error) {
 		return Downloads, nil
 	case "help":
 		return Help, nil
+	case "repo":
+		return Repo, nil
 	default:
 		return -1, fmt.Errorf("%s is not a valid command", cmd)
 	}
