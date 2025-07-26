@@ -26,11 +26,7 @@ func main() {
 
 	posArgs := flags.PosArgs()
 
-	command, err := matchCommand(posArgs[0])
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	command := matchCommand(posArgs[0])
 
 	verbose := flags.GetBool("verbose")
 
@@ -62,19 +58,20 @@ func main() {
 		return
 	default:
 		fmt.Printf("%s is not a valid command\n", args[0])
+		commands.Help()
 		return
 	}
 }
 
-func matchCommand(cmd string) (Command, error) {
+func matchCommand(cmd string) Command {
 	switch strings.ToLower(cmd) {
 	case "downloads":
-		return Downloads, nil
+		return Downloads
 	case "help":
-		return Help, nil
+		return Help
 	case "repo":
-		return Repo, nil
+		return Repo
 	default:
-		return -1, fmt.Errorf("%s is not a valid command", cmd)
+		return Help
 	}
 }
