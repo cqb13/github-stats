@@ -11,9 +11,11 @@ import (
 type Command int
 
 const (
-	Downloads Command = 0
-	Help      Command = 1
-	Repo      Command = 2
+	Downloads Command = iota
+	Help
+	Followers
+	Following
+	Repo
 )
 
 func main() {
@@ -45,9 +47,29 @@ func main() {
 	case Help:
 		commands.Help()
 		return
+	case Followers:
+		if len(args) < 2 {
+			fmt.Println("Not enough args: followers user")
+			return
+		}
+
+		user := posArgs[1]
+
+		commands.HandleRelationsCommand(user, commands.Followers, verbose)
+		return
+	case Following:
+		if len(args) < 2 {
+			fmt.Println("Not enough args: following user")
+			return
+		}
+
+		user := posArgs[1]
+
+		commands.HandleRelationsCommand(user, commands.Following, verbose)
+		return
 	case Repo:
 		if len(args) < 3 {
-			fmt.Println("Not enough args: downloads user repo")
+			fmt.Println("Not enough args: repo user repo")
 			return
 		}
 
@@ -69,6 +91,10 @@ func matchCommand(cmd string) Command {
 		return Downloads
 	case "help":
 		return Help
+	case "followers":
+		return Followers
+	case "following":
+		return Following
 	case "repo":
 		return Repo
 	default:

@@ -15,6 +15,10 @@ func Help() {
 	fmt.Println()
 	fmt.Println("\tdownloads: shows download counts of github releases")
 	fmt.Println("\t\t[user] [repo]")
+	fmt.Println("\tfollowers: shows the followers of a user")
+	fmt.Println("\t\t[user]")
+	fmt.Println("\tfollowing: shows the users a user is following")
+	fmt.Println("\t\t[user]")
 	fmt.Println("\trepo: shows information about a repository")
 	fmt.Println("\t\t[user] [repo]")
 

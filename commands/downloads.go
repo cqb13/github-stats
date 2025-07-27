@@ -30,24 +30,24 @@ func HandleDownloadsCommand(user string, repo string, verbose bool) {
 			return
 		}
 
-		var releasesData []release
+		var releaseList []release
 
 		if strings.Contains(string(resp), `"message":"Not Found"`) {
 			fmt.Println("Failed to find repository")
 			return
 		}
 
-		err = json.Unmarshal(resp, &releasesData)
+		err = json.Unmarshal(resp, &releaseList)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		if len(releasesData) == 0 {
+		if len(releaseList) == 0 {
 			break
 		}
 
-		for _, release := range releasesData {
+		for _, release := range releaseList {
 			releaseAssetDownloads := 0
 			for _, asset := range release.Assets {
 				releaseAssetDownloads += asset.Downloads
@@ -63,7 +63,7 @@ func HandleDownloadsCommand(user string, repo string, verbose bool) {
 			downloadCount += releaseAssetDownloads
 		}
 
-		releaseCount += len(releasesData)
+		releaseCount += len(releaseList)
 
 		page++
 	}
