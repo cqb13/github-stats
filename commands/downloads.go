@@ -30,12 +30,12 @@ func HandleDownloadsCommand(user string, repo string, verbose bool) {
 			return
 		}
 
-		var releaseList []release
-
 		if strings.Contains(string(resp), `"message":"Not Found"`) {
 			fmt.Println("Failed to find repository")
 			return
 		}
+
+		var releaseList []release
 
 		err = json.Unmarshal(resp, &releaseList)
 		if err != nil {

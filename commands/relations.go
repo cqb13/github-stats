@@ -26,7 +26,7 @@ func (r RelationType) ToString() string {
 	}
 }
 
-type ghUser struct {
+type relationUser struct {
 	Login string `json:"login"`
 }
 
@@ -49,11 +49,11 @@ func HandleRelationsCommand(user string, relationType RelationType, verbose bool
 		}
 
 		if strings.Contains(string(resp), `"message":"Not Found"`) {
-			fmt.Println("Failed to find repository")
+			fmt.Println("Failed to find user")
 			return
 		}
 
-		var userList []ghUser
+		var userList []relationUser
 
 		err = json.Unmarshal(resp, &userList)
 		if err != nil {

@@ -16,6 +16,7 @@ const (
 	Followers
 	Following
 	Repo
+	User
 )
 
 func main() {
@@ -35,7 +36,7 @@ func main() {
 	switch command {
 	case Downloads:
 		if len(args) < 3 {
-			fmt.Println("Not enough args: downloads user repo")
+			fmt.Println("Not enough args: downloads [user] [repo]")
 			return
 		}
 
@@ -49,7 +50,7 @@ func main() {
 		return
 	case Followers:
 		if len(args) < 2 {
-			fmt.Println("Not enough args: followers user")
+			fmt.Println("Not enough args: followers [user]")
 			return
 		}
 
@@ -59,7 +60,7 @@ func main() {
 		return
 	case Following:
 		if len(args) < 2 {
-			fmt.Println("Not enough args: following user")
+			fmt.Println("Not enough args: following [user]")
 			return
 		}
 
@@ -69,7 +70,7 @@ func main() {
 		return
 	case Repo:
 		if len(args) < 3 {
-			fmt.Println("Not enough args: repo user repo")
+			fmt.Println("Not enough args: repo [user] [repo]")
 			return
 		}
 
@@ -77,6 +78,16 @@ func main() {
 		repo := posArgs[2]
 
 		commands.HandleRepoCommand(user, repo, verbose)
+		return
+	case User:
+		if len(args) < 2 {
+			fmt.Println("Not enough args: user [user]")
+			return
+		}
+
+		user := posArgs[1]
+
+		commands.HandleUserCommand(user, verbose)
 		return
 	default:
 		fmt.Printf("%s is not a valid command\n", args[0])
@@ -97,6 +108,8 @@ func matchCommand(cmd string) Command {
 		return Following
 	case "repo":
 		return Repo
+	case "user":
+		return User
 	default:
 		return Help
 	}
