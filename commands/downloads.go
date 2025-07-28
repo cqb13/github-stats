@@ -2,6 +2,7 @@ package commands
 
 import (
 	"dev/cqb13/gstats/utils"
+	"dev/cqb13/gstats/utils/ansi"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -29,24 +30,24 @@ func HandleDownloadsCommand(user string, repo string, verbose bool) {
 			return
 		}
 
-		var releases []release
-
 		if strings.Contains(string(resp), `"message":"Not Found"`) {
 			fmt.Println("Failed to find repository")
 			return
 		}
 
-		err = json.Unmarshal(resp, &releases)
+		var releaseList []release
+
+		err = json.Unmarshal(resp, &releaseList)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		if len(releases) == 0 {
+		if len(releaseList) == 0 {
 			break
 		}
 
-		for _, release := range releases {
+		for _, release := range releaseList {
 			releaseAssetDownloads := 0
 			for _, asset := range release.Assets {
 				releaseAssetDownloads += asset.Downloads
@@ -57,12 +58,12 @@ func HandleDownloadsCommand(user string, repo string, verbose bool) {
 					fmt.Println(err)
 					return
 				}
-				fmt.Printf("%-10d%-20s%s\n", releaseAssetDownloads, release.Name, publishedAt)
+				fmt.Printf("%s%-10d%s%-20s%s\n", ansi.Bold, releaseAssetDownloads, ansi.Reset, release.Name, publishedAt)
 			}
 			downloadCount += releaseAssetDownloads
 		}
 
-		releaseCount += len(releases)
+		releaseCount += len(releaseList)
 
 		page++
 	}
@@ -72,5 +73,5 @@ func HandleDownloadsCommand(user string, repo string, verbose bool) {
 		return
 	}
 
-	fmt.Printf("%s/%s has %d downloads, across %d releases\n", user, repo, downloadCount, releaseCount)
+	fmt.Printf("%s/%s has %s%d%s downloads, across %s%d%s releases\n", user, repo, ansi.Bold, downloadCount, ansi.Reset, ansi.Bold, releaseCount, ansi.Reset)
 }

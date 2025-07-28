@@ -1,17 +1,28 @@
 package commands
 
-import "fmt"
+import (
+	"dev/cqb13/gstats/utils/ansi"
+	"fmt"
+)
 
 func Help() {
-	fmt.Println("gstats")
-	fmt.Println()
-	fmt.Println("COMMON ARGS:")
+	fmt.Printf("%sgstats%s\n\n", ansi.Bold, ansi.Reset)
+	fmt.Printf("%scommon args%s\n", ansi.Bold, ansi.Reset)
 	fmt.Println("\t--verbose: shows more information")
 	fmt.Println()
-	fmt.Println("COMMANDS:")
+	fmt.Printf("%scommands%s\n", ansi.Bold, ansi.Reset)
 	fmt.Println("\thelp: shows what commands do")
 	fmt.Println()
 	fmt.Println("\tdownloads: shows download counts of github releases")
 	fmt.Println("\t\t[user] [repo]")
+	fmt.Println("\tfollowers: shows the followers of a user")
+	fmt.Println("\t\t[user]")
+	fmt.Println("\tfollowing: shows the users a user is following")
+	fmt.Println("\t\t[user]")
+	fmt.Println("\trepo: shows information about a repository")
+	fmt.Println("\t\t[user] [repo]")
+	fmt.Println("\tuser: shows information about a user")
+	fmt.Println("\t\t[user]")
+
 	fmt.Println()
 }
