@@ -21,7 +21,10 @@ const (
 
 func main() {
 	args := os.Args[1:]
-
+	if len(args) == 0 {
+		commands.Help()
+		return
+	}
 	flags := utils.NewFlagSet()
 	flags.AddBoolFlag("verbose", false)
 
