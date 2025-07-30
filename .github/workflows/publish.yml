@@ -1,0 +1,47 @@
+name: publish
+
+on:
+  push:
+    paths:
+      - "**.go"
+      - ".github/workflows/publish.yml"
+
+jobs:
+  build-and-release:
+    name: Build and Release Binaries
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Set version
+        id: version
+        run: echo "VERSION=v0.2.0" >> $GITHUB_OUTPUT
+
+      - name: Build binaries
+        run: |
+          mkdir -p build
+          GOOS=linux GOARCH=amd64 go build -o build/gstats-linux .
+          GOOS=windows GOARCH=amd64 go build -o build/gstats-windows.exe .
+          GOOS=darwin GOARCH=amd64 go build -o build/gstats-macos .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          name: gstats ${{ steps.version.outputs.VERSION }}
+          files: |
+            build/gstats-linux
+            build/gstats-windows.exe
+            build/gstats-macos
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
