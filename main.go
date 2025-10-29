@@ -16,6 +16,7 @@ const (
 	Followers
 	Following
 	Repo
+	Starred
 	User
 )
 
@@ -82,6 +83,16 @@ func main() {
 
 		commands.HandleRepoCommand(user, repo, verbose)
 		return
+	case Starred:
+		if len(args) < 2 {
+			fmt.Println("Not enough args: user [user]")
+			return
+		}
+
+		user := posArgs[1]
+
+		commands.HandleStarredCommand(user, verbose)
+		return
 	case User:
 		if len(args) < 2 {
 			fmt.Println("Not enough args: user [user]")
@@ -111,6 +122,8 @@ func matchCommand(cmd string) Command {
 		return Following
 	case "repo":
 		return Repo
+	case "starred":
+		return Starred
 	case "user":
 		return User
 	default:

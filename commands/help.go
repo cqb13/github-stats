@@ -21,6 +21,8 @@ func Help() {
 	fmt.Println("\t\t[user]")
 	fmt.Println("\trepo: shows information about a repository")
 	fmt.Println("\t\t[user] [repo]")
+	fmt.Println("\tstarred: shows repositories starred by a user")
+	fmt.Println("\t\t[user]")
 	fmt.Println("\tuser: shows information about a user")
 	fmt.Println("\t\t[user]")
 
