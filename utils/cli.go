@@ -29,8 +29,8 @@ func (fs *FlagSet) AddBoolFlag(name string, defaultvalue bool) {
 
 func (fs *FlagSet) Parse(args []string) {
 	for _, arg := range args {
-		if strings.HasPrefix(arg, "--") {
-			name := strings.TrimPrefix(arg, "--")
+		if after, ok := strings.CutPrefix(arg, "--"); ok {
+			name := after
 			if flag, exists := fs.boolflags[name]; exists {
 				flag.found = true
 			}
