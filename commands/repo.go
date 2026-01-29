@@ -111,20 +111,20 @@ func HandleRepoCommand(user string, repo string, verbose bool) {
 }
 
 func createTopicStr(topics []string) string {
-	topicStr := ""
+	var topicStr strings.Builder
 	perLine := 3
 
 	length := len(topics) - 1
 
 	for i, topic := range topics {
-		topicStr += fmt.Sprintf("%s%s%s", ansi.Bold, topic, ansi.Reset)
+		fmt.Fprintf(&topicStr, "%s%s%s", ansi.Bold, topic, ansi.Reset)
 		if i != length {
-			topicStr += ", "
+			topicStr.WriteString(", ")
 			if i%perLine == 0 && i >= perLine {
-				topicStr += "\n"
+				topicStr.WriteString("\n")
 			}
 		}
 	}
 
-	return topicStr
+	return topicStr.String()
 }
